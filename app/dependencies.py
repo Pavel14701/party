@@ -1,8 +1,15 @@
-from dishka import Provider, Scope
-from dishka import make_container
-from app.services.my_service import MyService
+from sqlalchemy.ext.asyncio import AsyncSession
+from .containers import Database
+from typing import AsyncGenerator
 
-service_provider = Provider(scope=Scope.REQUEST)
-service_provider.provide(MyService)
+database = Database()
 
-container = make_container(service_provider)
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    async with database.session() as session:
+        try:
+            yield session
+        except Exception as e:
+            await session.rollback()
+            raise e
+        finally:
+            await session.close()
