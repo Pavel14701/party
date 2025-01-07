@@ -5,5 +5,5 @@ from app.core import config
 
 
 class Database(containers.DeclarativeContainer):
-    engine = providers.Singleton(create_async_engine, config.DATABASE_URL, echo=True)
+    engine = providers.Singleton(create_async_engine, config.DATABASE_URL, echo=False)
     session = providers.Singleton(sessionmaker, bind=engine, class_=AsyncSession, expire_on_commit=False)

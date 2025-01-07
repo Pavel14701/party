@@ -17,5 +17,8 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
     session = SessionLocal()
     try:
         yield session
+    except Exception as e:
+        await session.rollback()
+        raise e
     finally:
         await session.close()
