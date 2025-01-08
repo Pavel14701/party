@@ -10,9 +10,6 @@ SessionLocal = sessionmaker(
     bind=async_engine, class_=AsyncSession, expire_on_commit=False
 )
 
-# Синхронный движок для операций с метаданными
-sync_engine = create_engine(DATABASE_URL.replace("asyncpg", "psycopg2"), echo=True)
-
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     session = SessionLocal()
     try:

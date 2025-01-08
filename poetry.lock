@@ -558,6 +558,17 @@ files = [
 ]
 
 [[package]]
+name = "phonenumbers"
+version = "8.13.52"
+description = "Python version of Google's common library for parsing, formatting, storing and validating international phone numbers."
+optional = false
+python-versions = "*"
+files = [
+    {file = "phonenumbers-8.13.52-py2.py3-none-any.whl", hash = "sha256:e803210038ece9d208b129e3023dc20e656a820d6bf6f1cb0471d4164f54bada"},
+    {file = "phonenumbers-8.13.52.tar.gz", hash = "sha256:fdc371ea6a4da052beb1225de63963d5a2fddbbff2bb53e3a957f360e0185f80"},
+]
+
+[[package]]
 name = "prompt-toolkit"
 version = "3.0.48"
 description = "Library for building powerful interactive command lines in Python"
@@ -916,4 +927,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "21fd7e306cc7594cd47650035a325ab09712c86f8e9dcdbc4cb0e0ee8243d14b"
+content-hash = "add70eed4caa0383fe4edf50417abb68adc6e5dcb715f50fd9adba74a5b67ca7"

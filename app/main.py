@@ -5,7 +5,7 @@ import logging
 
 class SensitiveDataFilter(logging.Filter):
     def filter(self, record):
-        record.msg = self.mask_sensitive_data(record.msg)
+        record.msg = self.mask_sensitive_data(str(record.msg))
         return True
 
     @staticmethod
@@ -14,9 +14,9 @@ class SensitiveDataFilter(logging.Filter):
             msg = msg.replace(config.DATABASE_URL, "****")
         return msg
 
-
 logger = logging.getLogger('sqlalchemy.engine')
 logger.addFilter(SensitiveDataFilter())
+
 
 
 app = FastAPI()
