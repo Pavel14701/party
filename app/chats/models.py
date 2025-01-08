@@ -5,20 +5,9 @@ from sqlalchemy import (
 )
 from sqlalchemy.sql import func
 from sqlalchemy.orm import (relationship, DeclarativeMeta)
-from app.db.base_class import _Base
+from app.core.base_class import _Base
 
 Base: DeclarativeMeta = _Base()
-
-class User(Base):
-    __tablename__ = "chat_users"
-    id = Column(BigInteger, primary_key=True, index=True)
-    username = Column(String(length=255), unique=True, nullable=False)
-    email = Column(String(length=255), unique=True, nullable=False)
-    created_at = Column(TIMESTAMP, server_default=func.now())
-    groups = relationship("Group", secondary="chat_user_groups", back_populates="members")
-    messages = relationship("Message", back_populates="author")
-    histories = relationship("History", back_populates="author")
-    images = relationship("Image", back_populates="author")
 
 class Chat(Base):
     __tablename__ = "chat_chats"

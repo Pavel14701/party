@@ -1,9 +1,11 @@
 from sqlalchemy import (
     Column, Integer, BigInteger,
-    String, ForeignKey, Table
+    String, ForeignKey, Table,
+    TIMESTAMP
 )
 from sqlalchemy.orm import (relationship, DeclarativeMeta)
-from app.db.base_class import _Base
+from sqlalchemy.sql import func
+from app.core.base_class import _Base
 
 Base:DeclarativeMeta = _Base()
 
@@ -33,14 +35,20 @@ class User(Base):
     __tablename__ = "user_users"
     id = Column(BigInteger, primary_key=True, index=True)
     username = Column(String(length=255), unique=True, nullable=False)
+    email = Column(String(length=255), unique=True, nullable=True)
+    password = Column(String(length=1024))
     country_id = Column(Integer, ForeignKey("user_countries.id"))
     country = relationship("Country")
     bio = Column(String(lenghts=2048))
-    email = Column(String(length=255), unique=True, nullable=True)
     phone_number = Column(String(lenghts=30), unique=True, nullable=False)
     favorite_cuisines = relationship("Cuisine", secondary=association_table_favorites_cuisines, back_populates="users")
     favorite_music_styles = relationship("MusicStyle", secondary=association_table_favorites_music_styles, back_populates="users")
     favorite_places = relationship("Place", secondary=association_table_favorites_places, back_populates="users")
+    groups = relationship("Group", secondary="chat_user_groups", back_populates="members")
+    messages = relationship("Message", back_populates="author")
+    histories = relationship("History", back_populates="author")
+    images = relationship("Image", back_populates="author")
+    created_at = Column(TIMESTAMP, server_default=func.now())
 
 class Country(Base):
     __tablename__ = "user_countries"

@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from alembic import context
 import asyncio
 from sqlalchemy.orm import DeclarativeMeta
-from app.db.base_class import _Base
+from app.core.base_class import _Base
 
-from app.db.models import places
+from app.places import models
 config = context.config
 fileConfig(config.config_file_name)
 Base:DeclarativeMeta = _Base()

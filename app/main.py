@@ -1,24 +1,26 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from app.routers import places
-from app.core import config
+from app.places import routers
+from app.auth import (routers)
+from app.utils.containers import Database
 import logging
+from app.utils.data_filter import SensitiveDataFilter
 
-class SensitiveDataFilter(logging.Filter):
-    def filter(self, record):
-        record.msg = self.mask_sensitive_data(str(record.msg))
-        return True
 
-    @staticmethod
-    def mask_sensitive_data(msg):
-        if isinstance(msg, str):
-            msg = msg.replace(config.DATABASE_URL, "****")
-        return msg
 
 logger = logging.getLogger('sqlalchemy.engine')
 logger.addFilter(SensitiveDataFilter())
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    container = Database()
+    container.init_resources()
+    container.wire(modules=[__name__])
+    yield
+    await container.unwire()
 
-app = FastAPI()
 
-app.include_router(places.router)
+app = FastAPI(lifespan=lifespan)
+app.include_router(routers.router)
+app.include_router(routers.router)

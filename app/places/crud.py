@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.db.models import places as models
-from app.schemas import places as schemas
+from app.places import models as models
+from app.places import schemas as schemas
 
 async def create_place(db: AsyncSession, place: schemas.PlaceCreate):
     place_data = place.model_dump() 

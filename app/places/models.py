@@ -4,7 +4,7 @@ from sqlalchemy import (
     Numeric
 )
 from sqlalchemy.orm import (relationship, DeclarativeMeta)
-from app.db.base_class import _Base
+from app.core.base_class import _Base
 
 Base:DeclarativeMeta = _Base()
 
