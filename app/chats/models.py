@@ -4,10 +4,9 @@ from sqlalchemy import (
     Boolean, Table
 )
 from sqlalchemy.sql import func
-from sqlalchemy.orm import (relationship, DeclarativeMeta)
-from app.core.base_class import _Base
+from sqlalchemy.orm import relationship
+from app.core.base_class import Base
 
-Base: DeclarativeMeta = _Base()
 
 class Chat(Base):
     __tablename__ = "chat_chats"

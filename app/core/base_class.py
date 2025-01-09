@@ -1,4 +1,3 @@
-from dependency_injector import providers
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, DeclarativeMeta
 
-_Base = providers.Singleton(declarative_base)
+Base:DeclarativeMeta = declarative_base()

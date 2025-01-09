@@ -12,11 +12,11 @@ celery = "^5.4.0"
 uvicorn = "^0.34.0"
 alembic = "^1.14.0"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.36"}
-dependency-injector = "^4.45.0"
 phonenumbers = "^8.13.52"
 python-jose = "^3.3.0"
 passlib = "^1.7.4"
 aiokafka = "^0.12.0"
+python-multipart = "^0.0.20"
 
 
 [build-system]

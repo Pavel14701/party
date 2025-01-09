@@ -6,17 +6,15 @@ from fastapi import (
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth.schemas import Token
-from dependency_injector.wiring import inject, Provide
 from app.auth.security import verify_password
 from app.auth.jwt import create_access_token
-from app.utils.containers import Database
+from app.core.session import get_session
 from app.users.crud import get_user
 
 router = APIRouter()
 
 @router.post("/token", response_model=Token)
-@inject
-async def login_for_access_token(db: AsyncSession = Depends(Provide[Database.get_session]), form_data: OAuth2PasswordRequestForm = Depends()):
+async def login_for_access_token(db: AsyncSession = Depends(get_session), form_data: OAuth2PasswordRequestForm = Depends()):
     user = await get_user(db, username=form_data.username)
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(

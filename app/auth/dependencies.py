@@ -5,12 +5,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth.schemas import TokenData, User
 from app.auth.jwt import decode_access_token
 from app.users.crud import get_user
-from dependency_injector.wiring import inject, Provide
-from app.utils.containers import Database
+from app.core.session import get_session
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(Provide[Database.get_session])) -> User:
+async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_session)) -> User:
     """
     ## Получает текущего пользователя, исходя из OAuth2 токена.
 

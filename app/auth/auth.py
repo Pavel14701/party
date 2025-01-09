@@ -2,17 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth.schemas import TokenData, User, UserInDB
-from dependency_injector.wiring import inject, Provide
 from app.auth.security import verify_password, get_password_hash
 from app.auth.jwt import create_access_token
-from app.utils.containers import Database
+from app.core.session import get_session
 from app.users.crud import get_user
 
 router = APIRouter()
 
 @router.post("/token")
-@inject
-async def login_for_access_token(db: AsyncSession = Depends(Provide[Database.get_session]), form_data: OAuth2PasswordRequestForm = Depends()):
+async def login_for_access_token(db: AsyncSession = Depends(get_session), form_data: OAuth2PasswordRequestForm = Depends()):
     """
     ## Аутентифицирует пользователя и выдает токен доступа.
     ## Аргументы:

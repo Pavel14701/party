@@ -3,10 +3,8 @@ from sqlalchemy import (
     String, ForeignKey, Table,
     Numeric
 )
-from sqlalchemy.orm import (relationship, DeclarativeMeta)
-from app.core.base_class import _Base
-
-Base:DeclarativeMeta = _Base()
+from sqlalchemy.orm import relationship
+from app.core.base_class import Base
 
 # Ассоциативные таблицы
 association_table_categories = Table(
@@ -91,7 +89,7 @@ class Label(Base):
 class Image(Base):
     __tablename__ = "place_images"
     id = Column(BigInteger, primary_key=True, index=True)
-    alt = Column(String(lenghts=150))
+    alt = Column(String(length=150))
     url = Column(String(length=255))
     place_id = Column(Integer, ForeignKey("place_places.id"))
     place = relationship("Place", back_populates="images")

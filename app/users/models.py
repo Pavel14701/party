@@ -3,11 +3,9 @@ from sqlalchemy import (
     String, ForeignKey, Table,
     TIMESTAMP
 )
-from sqlalchemy.orm import (relationship, DeclarativeMeta)
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from app.core.base_class import _Base
-
-Base:DeclarativeMeta = _Base()
+from app.core.base_class import Base
 
 
 # Ассоциация для избранных кухонь
@@ -39,8 +37,8 @@ class User(Base):
     password = Column(String(length=1024))
     country_id = Column(Integer, ForeignKey("user_countries.id"))
     country = relationship("Country")
-    bio = Column(String(lenghts=2048))
-    phone_number = Column(String(lenghts=30), unique=True, nullable=False)
+    bio = Column(String(length=2048))
+    phone_number = Column(String(length=30), unique=True, nullable=False)
     favorite_cuisines = relationship("Cuisine", secondary=association_table_favorites_cuisines, back_populates="users")
     favorite_music_styles = relationship("MusicStyle", secondary=association_table_favorites_music_styles, back_populates="users")
     favorite_places = relationship("Place", secondary=association_table_favorites_places, back_populates="users")
