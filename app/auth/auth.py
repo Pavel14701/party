@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.auth.schemas import TokenData, User, UserInDB
 from app.auth.security import verify_password, get_password_hash
 from app.auth.jwt import create_access_token
-from app.core.session import get_session
+from app.infrastructure.database import get_session
 from app.users.crud import get_user
 
 router = APIRouter()
