@@ -12,7 +12,8 @@ AMQPController = RabbitRouter()
 @AMQPController.publisher("place_statuses")
 async def handle(data: PlaceSchema, interactor: Depends[NewPlaceInteractor]) -> str:
     dto = NewPlaceDTO(
-        
+        title=data.title,
+        pages=data.pages,
+        is_read=data.is_read
     )
-    uuid = await interactor(dto)
-    return uuid
+    return await interactor(dto)

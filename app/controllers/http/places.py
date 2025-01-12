@@ -8,7 +8,7 @@ from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
 
 from app.applications.places.interactors import (
-    GetPlaceInteractor, NewPlaceInteractor,
+    GetPlaceByIdInteractor, NewPlaceInteractor,
     UpdatePlaceInteractor, DeletePlaceInteractor
 ) 
 from app.controllers.schemas import PlaceSchema
@@ -23,13 +23,13 @@ class HttpPlaceController:
     async def get_place(
         self, 
         place_id: Annotated[UUID, str], 
-        interactor: Depends[GetPlaceInteractor]
+        interactor: Depends[GetPlaceByIdInteractor]
     ) -> PlaceSchema:
-        place_dm = await interactor(uuid=str(place_id))
+        place_dm = await interactor(id=str(place_id))
         if not place_dm:
             raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Place not found")
         return PlaceSchema(
-            uuid=place_dm.uuid,
+            id=place_dm.id,
             name=place_dm.name,
             organization_id=place_dm.organization_id,
             latitude=place_dm.latitude,

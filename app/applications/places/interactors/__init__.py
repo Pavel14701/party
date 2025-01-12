@@ -1,8 +1,4 @@
-from .places import (
-    GetPlaceByIdInteractor, GetAllPlacesInteractor, GetPlaceByGeoInteractor,
-    GetPlaceByIdGeoInteractor, GetPlaceByNameInteractor, NewPlaceInteractor,
-    UpdatePlaceInteractor, DeletePlaceInteractor
-)
+from .places import *
 from .organizations import (
     GetOrganizationInteractor, NewOrganizationInteractor,
     UpdateOrganizationInteractor, DeleteOrganizationInteractor
