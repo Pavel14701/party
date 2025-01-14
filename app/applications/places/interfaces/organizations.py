@@ -2,25 +2,25 @@ from abc import abstractmethod
 from typing import Protocol
 from typing import List, Optional
 
-from app.domain import OrganizationDomainModel
+from app.domain import OrganizationDM
 
 class OrganizationSaver(Protocol):
     @abstractmethod
-    async def save(self, organization: OrganizationDomainModel) -> None:
+    async def save(self, organization: OrganizationDM) -> None:
         ...
 
 class OrganizationReader(Protocol):
     @abstractmethod
-    async def read_by_uuid(self, uuid: str) -> Optional[OrganizationDomainModel]:
+    async def read_by_uuid(self, uuid: str) -> Optional[OrganizationDM]:
         ...
     
     @abstractmethod
-    async def read_all(self) -> List[OrganizationDomainModel]:
+    async def read_all(self) -> List[OrganizationDM]:
         ...
 
 class OrganizationUpdater(Protocol):
     @abstractmethod
-    async def update(self, organization: OrganizationDomainModel) -> None:
+    async def update(self, organization: OrganizationDM) -> None:
         ...
 
 class OrganizationDeleter(Protocol):

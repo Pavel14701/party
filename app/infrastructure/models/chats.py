@@ -38,26 +38,30 @@ class Group(Base):
     members = relationship("User", secondary="chat_user_groups", back_populates="groups")
 
 class BaseChatMessage(Base):
-    __abstract__=True
+    __abstract__ = True
     id: Mapped[str] = mapped_column(UUID(as_uuid=True), primary_key=True, index=True)
     user_id: Mapped[str] = mapped_column(UUID(as_uuid=True), sa.ForeignKey("chat_users.id"), nullable=False)
     chat_id: Mapped[str] = mapped_column(UUID(as_uuid=True), sa.ForeignKey("chat_chats.id"), nullable=False)
     readed: Mapped[bool] = mapped_column(sa.Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(sa.TIMESTAMP, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(sa.TIMESTAMP, server_default=func.now(), onupdate=func.now())
-    author = relationship("User", back_populates="messages")
-    chat = relationship("Chat", back_populates="messages")
 
 class Message(BaseChatMessage):
     __tablename__ = "chat_messages"
     content: Mapped[str] = mapped_column(sa.String(length=4096), nullable=False)
+    author = relationship("User", back_populates="author")
+    chat = relationship("Chat", back_populates="chat")
 
 class Video(BaseChatMessage):
     __tablename__ = "chat_videos"
     content: Mapped[str] = mapped_column(sa.String(length=255), nullable=False)
     description: Mapped[str] = mapped_column(sa.String(length=1024), nullable=True)
+    author = relationship("User", back_populates="author")
+    chat = relationship("Chat", back_populates="chat")
 
 class Image(BaseChatMessage):
     __tablename__ = "chat_images"
     content: Mapped[str] = mapped_column(sa.String(length=255), nullable=False)
     description: Mapped[str] = mapped_column(sa.String(length=1024), nullable=True)
+    author = relationship("User", back_populates="author")
+    chat = relationship("Chat", back_populates="chat")

@@ -38,11 +38,10 @@ class HttpPlaceController:
             logo=place_dm.logo
         )
 
-    @router.update("/{place_id}", response_model=PlaceSchema)
+    @router.update("/{place_id}")
     @inject
     async def update_place(
         self,
-        place_id: Annotated[UUID, str],
         interactor: Depends[UpdatePlaceInteractor]
     ) -> PlaceSchema:
         place_dm = await interactor()

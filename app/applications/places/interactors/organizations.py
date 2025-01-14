@@ -6,7 +6,7 @@ from app.applications.places.interfaces import (
     OrganizationUpdater, OrganizationDeleter
 )
 from app.applications.places.dto import NewOrganizationDTO, UpdateOrganizationDTO 
-from app.domain.essences import OrganizationDomainModel
+from app.domain.essences import OrganizationDM
 
 
 class GetOrganizationInteractor:
@@ -16,7 +16,7 @@ class GetOrganizationInteractor:
     ) -> None:
         self._gateway = gateway
 
-    async def __call__(self, uuid: str) -> Optional[OrganizationDomainModel]:
+    async def __call__(self, uuid: str) -> Optional[OrganizationDM]:
         return await self._gateway.read_by_uuid(uuid)
 
 class NewOrganizationInteractor:
@@ -32,7 +32,7 @@ class NewOrganizationInteractor:
 
     async def __call__(self, dto: NewOrganizationDTO) -> str:
         uuid = str(self._uuid_generator())
-        organization = OrganizationDomainModel(
+        organization = OrganizationDM(
             uuid=uuid,
             name=dto.name,
             unp=dto.unp,
@@ -55,7 +55,7 @@ class UpdateOrganizationInteractor:
         self._gateway = gateway
 
     async def __call__(self, dto: UpdateOrganizationDTO) -> None:
-        organization = OrganizationDomainModel(
+        organization = OrganizationDM(
             uuid=dto.uuid,
             name=dto.name,
             unp=dto.unp,

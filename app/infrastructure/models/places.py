@@ -50,6 +50,7 @@ class Place(Base):
     geom: Mapped[str] = mapped_column(Geography(geometry_type='POINT', srid=4326)) # Поле для PostGIS
     description: Mapped[str] = mapped_column(sa.String(length=4096))
     logo: Mapped[str] = mapped_column(sa.String(length=255))
+    
     videos = relationship("Video", back_populates="place")
     images = relationship("Image", back_populates="place")
     services = relationship("Service", back_populates="place")
@@ -58,24 +59,8 @@ class Place(Base):
     labels = relationship("Label", secondary=association_table_labels, back_populates="place")
     reviews_google = relationship("GoogleReviews", back_populates="place")
     reviews_yandex = relationship("YandexReviews", back_populates="place")
+    reviews = relationship("Reviews", back_populates="place")
 
-class GoogleReviews(Base):
-    __tablename__ = "place_reviews_google"
-    id: Mapped[str] = mapped_column(sa.Uuid, primary_key=True)
-    reviewer_name: Mapped[str] = mapped_column(sa.String(length=255), index=True)
-    review: Mapped[str] = mapped_column(sa.String(length=2048))
-    review_mark: Mapped[Decimal] = mapped_column(sa.Numeric(1, 2))
-    place_id: Mapped[str] = mapped_column(sa.Uuid, sa.ForeignKey("place_places.id"))
-    place = relationship("Place", back_populates="reviews_google")
-
-class YandexReviews(Base):
-    __tablename__ = "place_reviews_yandex"
-    id: Mapped[str] = mapped_column(sa.Uuid, primary_key=True)
-    reviewer_name: Mapped[str] = mapped_column(sa.String(length=255), index=True)
-    review: Mapped[str] = mapped_column(sa.String(length=255))
-    review_mark: Mapped[Decimal] = mapped_column(sa.Numeric(1, 0))
-    place_id: Mapped[str] = mapped_column(sa.Uuid, sa.ForeignKey("place_places.id"))
-    place = relationship("Place", back_populates="reviews_yandex")
 
 class Category(Base):
     __tablename__ = "place_categories"

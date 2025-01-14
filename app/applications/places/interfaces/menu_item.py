@@ -2,26 +2,26 @@ from abc import abstractmethod
 from typing import Protocol
 from typing import List, Optional
 
-from app.domain import MenuItemDomainModel
+from app.domain import MenuItemDM
 
 
 class MenuItemSaver(Protocol):
     @abstractmethod
-    async def save(self, menu_item: MenuItemDomainModel) -> None:
+    async def save(self, menu_item: MenuItemDM) -> None:
         ...
 
 class MenuItemReader(Protocol):
     @abstractmethod
-    async def read_by_uuid(self, uuid: str) -> Optional[MenuItemDomainModel]:
+    async def read_by_uuid(self, uuid: str) -> Optional[MenuItemDM]:
         ...
     
     @abstractmethod
-    async def read_all(self) -> List[MenuItemDomainModel]:
+    async def read_all(self) -> List[MenuItemDM]:
         ...
 
 class MenuItemUpdater(Protocol):
     @abstractmethod
-    async def update(self, menu_item: MenuItemDomainModel) -> None:
+    async def update(self, menu_item: MenuItemDM) -> None:
         ...
 
 class MenuItemDeleter(Protocol):

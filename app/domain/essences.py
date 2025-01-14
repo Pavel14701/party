@@ -1,7 +1,10 @@
 from decimal import Decimal
 from datetime import datetime, time
 from typing import List, Optional
+
 from pydantic import BaseModel
+
+from .places import PlaceDM, BaseDM, BaseIdDM
 
 class Token(BaseModel):
     access_token: str
@@ -10,38 +13,26 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Optional[str] = None
 
-class BaseIdDM(BaseModel):
-    id: Optional[str] = None
-
-    class Config:
-        from_attributes=True
-
-class BaseDM(BaseIdDM):
-    name: Optional[str] = None
-
-class BaseReview(BaseIdDM):
-    reviewer_name: Optional[str]
-    review: str
-    review_mark: Decimal
-    place_id: str
-
 class UserDM(BaseIdDM):
     username: str
-    firstname: str
-    lastname: str
-    email: Optional[str]
+    firstname: Optional[str] = None
+    lastname: Optional[str] = None
+    email: Optional[str] = None
     password: str
     country_id: int
-    bio: Optional[str]
+    country: str
+    organization: Optional[str] = None
+    bio: Optional[str] = None
     phone_number: str
     created_at: datetime
-    favorite_cuisines: List['CuisineDM']
-    favorite_music_styles: List['MusicStyleDM']
-    favorite_places: List['PlaceDM']
-    groups: List['GroupDM']
-    messages: List['MessageDM']
-    histories: List['VideoDM']
-    images: List['ImageDM']
+    is_superuser: bool = False
+    favorite_cuisines: Optional[List['CuisineDM']] = None
+    favorite_music_styles: Optional[List['MusicStyleDM']] = None
+    favorite_places: Optional[List['PlaceDM']] = None
+    groups: Optional[List['GroupDM']] = None
+    messages: Optional[List['MessageDM']] = None
+    histories: Optional[List['VideoDM']] = None
+    images: Optional[List['ImageDM']] = None
 
 class ChatDM(BaseIdDM):
     chat_name: str
@@ -88,57 +79,4 @@ class CuisineDM(BaseDM):
 class MusicStyleDM(BaseDM):
     pass
 
-class OrganizationDM(BaseDM):
-    unp: str
-    address: str
-    current_account: str  # Рассчётный счёт
-    latitude: Decimal  # Широта
-    longitude: Decimal  # Долгота
 
-class PlaceDM(BaseDM):
-    organization_id: Optional[str] = None
-    latitude: Optional[Decimal] = None
-    longitude: Optional[Decimal] = None
-    description: Optional[str] = None
-    logo: Optional[str] = None
-
-class GoogleReviewsDM(BaseReview):
-    pass
-
-class YandexReviewsDM(BaseReview):
-    pass
-
-class CategoryDM(BaseDM):
-    pass
-
-class LabelDM(BaseModel):
-    pass
-
-class ImageDM(BaseIdDM):
-    alt: str
-    url: str
-    place_id: str
-
-class VideoDM(BaseIdDM):
-    url: str
-    place_id: str
-
-class ServiceDM(BaseDM):
-    price: Decimal
-    place_id: str
-
-class MenuItemDM(BaseDM):
-    price: Decimal
-    category_id: str
-    place_id: str
-
-class MenuCategoryDM(BaseDM):
-    pass
-
-class PlaceHoursDM(BaseIdDM):
-    day_of_week: str
-    open_time: time
-    close_time: time
-    is_weekend: bool
-    place_id: str
-    comment: Optional[str] = None

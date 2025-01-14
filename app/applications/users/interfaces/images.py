@@ -2,7 +2,13 @@ from abc import abstractmethod
 from typing import Protocol
 from typing import List, Optional
 
-from app.domain import ImageDM
+from app.domain.essences import (
+    UserDM, ChatDM, GroupDM,
+    MessageDM, VideoDM, ImageDM,
+    CuisineDM, MusicStyleDM, PlaceDM
+)
+
+
 
 
 class ImageSaver(Protocol):

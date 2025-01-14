@@ -1,5 +1,4 @@
-from datetime import timezone
-from datetime import datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from typing import Optional
 
 from fastapi import HTTPException, status
@@ -9,43 +8,51 @@ from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 
-from app.applications.interfaces import UserAuthenticator
-from app.domain.essences import User, UserInDB
+from app.core.config import SecurityConfig
+from app.applications.auth.interfaces import UserAuthentificator
+from app.domain.essences import UserDM
 
-class JWTAuthenticator(UserAuthenticator):
-    def __init__(self, secret_key: str, algorithm: str = "HS256"):
-        self.secret_key = secret_key
-        self.algorithm = algorithm
-        self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+class JWTAuthenticator(UserAuthentificator):
+    def __init__(self, config: SecurityConfig, session: AsyncSession) -> None:
+        self._secret_key = config.secret_key
+        self._algorithm = config.algorithm
+        self._db_session = session
+        self._token_expire = config.access_token_expire_minutes
+        self._pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-    async def authenticate(self, session: AsyncSession, username: str, password: str) -> Optional[User]:
-        user = await self.get_user_by_username(session, username)
-        if user and self.pwd_context.verify(password, user.password):
+    async def authenticate(self, username: str, password: str) -> Optional[UserDM]:
+        user = await self.get_user_by_username(username)
+        if user and self._pwd_context.verify(password, user.password):
             return user
         return None
 
-    async def get_current_user(self, token: str) -> Optional[User]:
+    async def get_current_user(self, token: str) -> Optional[UserDM]:
         try:
-            payload = jwt.decode(token, self.secret_key, algorithms=[self.algorithm])
+            payload = jwt.decode(token, self._secret_key, algorithms=[self._algorithm])
             username = payload.get("sub")
-            return None if username is None else UserInDB(**payload)
+            return None if username is None else UserDM(**payload)
         except ExpiredSignatureError as e:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Token expired") from e
         except JWTError as e:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token") from e
 
-    async def get_user_by_username(self, session: AsyncSession, username: str) -> Optional[UserInDB]:
-        result = await session.execute(
-            text("SELECT * FROM user_users WHERE username = :username"),
-            {"username": username}
-        )
-        return UserInDB(**row) if (row := result.fetchone()) else None
 
-    def create_access_token(self, data: dict, expires_delta: Optional[timedelta] = None):
+
+    def create_access_token(self, data: dict):
         to_encode = data.copy()
-        if expires_delta:
-            expire = datetime.now(timezone.utc) + expires_delta
-        else:
-            expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-        to_encode["exp"] = expire
-        return jwt.encode(to_encode, self.secret_key, algorithm=self.algorithm)
+        to_encode["exp"] = datetime.now(timezone.utc) + self._token_expire
+        return jwt.encode(
+            to_encode, self._secret_key, algorithm=self._algorithm
+        )
+
+    def refresh(self, token: str) -> str:
+        try:
+            payload = jwt.decode(token, self._secret_key, algorithms=[self._algorithm], options={"verify_exp": False})
+            if username := payload.get("sub"):
+                return self.create_access_token(
+                    {"sub": username}
+                )
+            else:
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token")
+        except JWTError as e:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token") from e
